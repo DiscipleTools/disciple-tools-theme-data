@@ -87,9 +87,10 @@ UPDATE `dt_geonames` SET has_polygon=1 WHERE north_latitude IS NOT NULL;
 ## 5. Export, Naming Convention, Zip
 The last part of the data preparation is exporting. 
 1. Export `dt_geonames` table to a (tsv) tab delimited file.
-    1. DO NOT enclose files with ("")
+    1. DO NOT enclose files with `"`
     1. DO NOT add first row column names.
-    1. Set NULL fields to \N 
+    1. Set NULL fields to `\N`
+    1. Escape fields with \
 1. Name the tab delimited file: `geonames.tsv`
 1. Zip tab delimited file as `geonames.tsv.zip`
     1. Note: Original ZIP was created on a Mac OS with the Archive Utility.

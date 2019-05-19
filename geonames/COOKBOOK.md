@@ -86,6 +86,18 @@ UPDATE `dt_geonames` SET alt_name=name;
 | has_polygon_collection| TINYINT(1)      | True/False. Polygon Collection Geojson is available. |
 
 
+## 5. Update `has_polygon` and `has_polygon_collection` Columns
+1. Download [Has Polygon CSV file (saturation-grid-project/polygon/available_polygons.csv)](https://github.com/DiscipleTools/saturation-grid-project/tree/master/polygon/available_polygons.csv)
+1. Download [Has Polygon Collection CSV file (saturation-grid-project/polygon/available_polygons_collection.csv)](https://github.com/DiscipleTools/saturation-grid-project/tree/master/polygon_collection/available_polygons.csv)
+1. Import has_polygon/available_polygons.csv file into new mysql table named 'has_polygon' 
+1. Import has_polygon_collection/available_polygons.csv file into new mysql table named 'has_polygon_collection' 
+1. Run update queries
+```apacheconfig
+UPDATE `dt_geonames` SET has_polygon=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon );
+UPDATE `dt_geonames` SET has_polygon=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon_collection );
+```
+Note: These are long running queries. Could be improved.
+
 ## 5. Export, Naming Convention, Zip
 The last part of the data preparation is exporting. 
 1. Export `dt_geonames` table to a (tsv) tab delimited file.

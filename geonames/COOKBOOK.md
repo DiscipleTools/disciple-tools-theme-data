@@ -94,7 +94,7 @@ UPDATE `dt_geonames` SET alt_name=name;
 1. Run update queries
 ```apacheconfig
 UPDATE `dt_geonames` SET has_polygon=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon );
-UPDATE `dt_geonames` SET has_polygon=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon_collection );
+UPDATE `dt_geonames` SET has_polygon_collection=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon_collection );
 ```
 Note: These are long running queries. Could be improved.
 

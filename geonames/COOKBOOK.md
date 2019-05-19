@@ -69,19 +69,21 @@ ALTER TABLE `dt_geonames` ADD `alt_population` BIGINT(20) NULL DEFAULT 0  AFTER 
 ALTER TABLE `dt_geonames` ADD `is_custom_location` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `alt_population`;
 ALTER TABLE `dt_geonames` ADD `alt_name_changed` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `is_custom_location`;
 ALTER TABLE `dt_geonames` ADD `has_polygon` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `alt_name_changed`;
+ALTER TABLE `dt_geonames` ADD `has_polygon_collection` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `has_polygon`;
 ALTER TABLE `dt_geonames` ADD FULLTEXT INDEX (`alt_name`);
 ALTER TABLE `dt_geonames` ADD INDEX (`has_polygon`);
+ALTER TABLE `dt_geonames` ADD INDEX (`has_polygon_collection`);
 UPDATE `dt_geonames` SET alt_name=name;
-UPDATE `dt_geonames` SET has_polygon=1 WHERE north_latitude IS NOT NULL;
 ```
 
-| Column               | Type            | Purpose  |
-| -------------------- |:---------------:| :-----|
-| alt_name             | VARCHAR(200)    | Editable field in DT. Duplicate name. |
-| alt_population       | BIGINT(20)      | Editable field in DT. Default 0. |
-| is_custom_location   | TINYINT(1)      | True/False. Row is a custom location. |
-| alt_name_changed     | TINYINT(1)      | True/False. Alt_Name field has been changed. |
-| has_polygon          | TINYINT(1)      | True/False. Single Polygon Geojson file is available. |
+| Column                | Type            | Purpose  |
+| --------------------  |:---------------:| :-----|
+| alt_name              | VARCHAR(200)    | Editable field in DT. Duplicate name. |
+| alt_population        | BIGINT(20)      | Editable field in DT. Default 0. |
+| is_custom_location    | TINYINT(1)      | True/False. Row is a custom location. |
+| alt_name_changed      | TINYINT(1)      | True/False. Alt_Name field has been changed. |
+| has_polygon           | TINYINT(1)      | True/False. Single Polygon Geojson is available. |
+| has_polygon_collection| TINYINT(1)      | True/False. Polygon Collection Geojson is available. |
 
 
 ## 5. Export, Naming Convention, Zip

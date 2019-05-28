@@ -93,8 +93,8 @@ UPDATE `dt_geonames` SET alt_name=name;
 1. Import has_polygon_collection/available_polygons.csv file into new mysql table named 'has_polygon_collection' 
 1. Run update queries
 ```apacheconfig
-UPDATE `dt_geonames` SET has_polygon=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon );
-UPDATE `dt_geonames` SET has_polygon_collection=1 WHERE geonameid IN (SELECT geonameid FROM has_polygon_collection );
+UPDATE dt_geonames as g INNER JOIN has_polygon as p ON g.geonameid=p.geonameid SET g.has_polygon=1;
+UPDATE dt_geonames as g INNER JOIN has_polygon_collection as p ON g.geonameid=p.geonameid SET g.has_polygon_collection=1;
 ```
 Note: These are long running queries. Could be improved.
 

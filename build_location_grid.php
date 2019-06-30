@@ -1,5 +1,13 @@
 <?php
-// Command Line Utility
+/**
+ * Command Line Utility for Building DT Location Grid Folder
+ *
+ * @requires a mysql database with connection information in the connect_params.json
+ *          The full location_grid table installed in the database.
+ *           ability to create/overwrite a new table called 'dt_location_grid'
+ *           ability to save to a subfolder called /location_grid
+ */
+
 // Extend PHP limits for large processing
 ini_set('memory_limit', '50000M');
 
@@ -16,6 +24,7 @@ $output = [
     'lg' => getcwd() . '/location_grid/',
     'jp' => getcwd() . '/jp_people_groups/',
     'imb' => getcwd() . '/imb_people_groups/',
+    'root' => getcwd(),
 ];
 foreach ( $output as $dirname ) {
     if ( ! is_dir( $dirname ) ) {
@@ -348,12 +357,12 @@ if ( ! $result ) {
 print date('H:i:s') . ' | Start dt_location_grid.tsv File Creation' . PHP_EOL;
 
 // Create Zip of dt_location_grid
-if ( file_exists( "{$output['lg']}dt_location_grid.tsv" ) ) {
-    unlink("{$output['lg']}dt_location_grid.tsv");
+if ( file_exists( "location_grid/dt_location_grid.tsv" ) ) {
+    unlink("location_grid/dt_location_grid.tsv");
 }
 
 $result = mysqli_query( $con, "
-SELECT * FROM `dt_location_grid` INTO OUTFILE '{$output['lg']}dt_location_grid.tsv' 
+SELECT * FROM `dt_location_grid` INTO OUTFILE '{$output['root']}/dt_location_grid.tsv' 
 FIELDS TERMINATED BY '\t' 
 LINES TERMINATED BY '\n';
     " );
@@ -369,14 +378,15 @@ if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
     unlink("{$output['lg']}dt_location_grid.tsv.zip");
     print date('H:i:s') . ' | Deleted previous zip' . PHP_EOL;
 }
+
 $zip = new ZipArchive();
 $zipfilename = "{$output['lg']}dt_location_grid.tsv.zip";
-
 if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
     exit("cannot open <$zipfilename>\n");
 }
 
-$zip->addFile ( "{$output['lg']}dt_location_grid.tsv" );
+$zip->addFile ( "dt_location_grid.tsv" );
+print $zip->numFiles . PHP_EOL;
 $zip->close();
 
 if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
@@ -433,7 +443,7 @@ foreach ( $list as $admin0 ) {
 
     if ( file_exists( $output['lg'] . $admin0 . '.tsv.zip' ) ) {
         unlink( $output['lg'] . $admin0 . '.tsv' );
-        $json[$admin0] = $admin0 . '.tsv.zip';
+        $json[$admin0] = $admin0 . '.tsv.zip'; // add to countries_with_extended_levels.json list
         print date('H:i:s') . ' | ' . $admin0 . PHP_EOL;
     } else {
         print date('H:i:s') . ' | ' . $admin0 . ' Not created.' . PHP_EOL;

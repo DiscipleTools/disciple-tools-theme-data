@@ -8,8 +8,7 @@ public data into a referable form into the system.
 ## Geonames
 The geonames saturation grid is the standardized location grid that Disciple Tools calculates saturation and activity data
 against.
-1. [Geonames](https://www.geonames.org/)
-1. [Saturation Grid Project](https://github.com/DiscipleTools/saturation-grid-project)
+1. [Location Grid Project](https://github.com/DiscipleTools/location-grid-project)
 
 @todo more description of the project required.
 

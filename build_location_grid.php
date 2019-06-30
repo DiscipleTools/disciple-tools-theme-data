@@ -389,7 +389,8 @@ if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
 }
 // end Create Zip of dt_location_grid
 
-
+// create country zip files
+$json = [];
 $results = mysqli_query( $con, "
 SELECT admin0_code FROM {$table['lg']} GROUP BY admin0_code;
     " );
@@ -432,11 +433,23 @@ foreach ( $list as $admin0 ) {
 
     if ( file_exists( $output['lg'] . $admin0 . '.tsv.zip' ) ) {
         unlink( $output['lg'] . $admin0 . '.tsv' );
+        $json[$admin0] = $admin0 . '.tsv.zip';
         print date('H:i:s') . ' | ' . $admin0 . PHP_EOL;
     } else {
         print date('H:i:s') . ' | ' . $admin0 . ' Not created.' . PHP_EOL;
     }
 
 }
+
+print date('H:i:s') . ' | Start create countries_with_extended_levels.json' . PHP_EOL;
+$json = json_encode( $json );
+if ( file_exists( $output['lg']  . 'countries_with_extended_levels.json' ) ) {
+    unlink($output['lg']  . 'countries_with_extended_levels.json' );
+}
+file_put_contents( $output['lg']  . 'countries_with_extended_levels.json', $json );
+if ( file_exists( $output['lg']  . 'countries_with_extended_levels.json' ) ) {
+    print date('H:i:s') . ' | End create countries_with_extended_levels.json' . PHP_EOL;
+}
+
 
 print date('H:i:s') . ' | Finish Script'. PHP_EOL;

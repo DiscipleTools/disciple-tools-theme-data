@@ -27,7 +27,7 @@ $output = [
     'lg' => getcwd() . '/location_grid/',
     'jp' => getcwd() . '/jp_people_groups/',
     'imb' => getcwd() . '/imb_people_groups/',
-    'root' => getcwd(),
+    'root' => getcwd() . '/',
 ];
 foreach ( $output as $dirname ) {
     if ( ! is_dir( $dirname ) ) {
@@ -413,13 +413,13 @@ if ( ! $result ) {
 print date('H:i:s') . ' | Start dt_location_grid.tsv File Creation' . PHP_EOL;
 
 // Create Zip of dt_location_grid
-if ( file_exists( "{$output['root']}/dt_location_grid.tsv" ) ) {
+if ( file_exists( "{$output['root']}dt_location_grid.tsv" ) ) {
     print 'unlink file' . PHP_EOL;
-    unlink("{$output['root']}/dt_location_grid.tsv");
+    unlink("{$output['root']}dt_location_grid.tsv");
 }
 
 $result = mysqli_query( $con, "
-SELECT * FROM `dt_location_grid` INTO OUTFILE '{$output['root']}/dt_location_grid.tsv' 
+SELECT * FROM `dt_location_grid` INTO OUTFILE '{$output['root']}dt_location_grid.tsv' 
 FIELDS TERMINATED BY '\t' 
 LINES TERMINATED BY '\n';
     " );
@@ -500,16 +500,30 @@ foreach ( $list as $admin0 ) {
     $zip->addFile ( $output['lg'] . $admin0 . '.tsv' );
     $zip->close();
 
-    if ( file_exists( $output['lg'] . $admin0 . '.tsv.zip' ) ) {
-        unlink( $output['lg'] . $admin0 . '.tsv' );
-        $json[$admin0] = $admin0 . '.tsv.zip'; // add to countries_with_extended_levels.json list
-        print date('H:i:s') . ' | ' . $admin0 . PHP_EOL;
-    } else {
+    if ( ! file_exists( $output['lg'] . $admin0 . '.tsv.zip' ) ) {
         print date('H:i:s') . ' | ' . $admin0 . ' Not created.' . PHP_EOL;
+        continue;
     }
+    unlink( $output['lg'] . $admin0 . '.tsv' );
+
+    // generate extension record
+    $query = mysqli_query( $con, "
+        SELECT count(*) as count FROM {$table['lg']} WHERE admin0_code = '{$admin0}' AND level > 2 AND level < 10;
+    " );
+    $count = mysqli_fetch_array( $query );
+
+    $query = mysqli_query( $con, "
+        SELECT name  FROM {$table['lg']} WHERE admin0_code = '{$admin0}' AND level= 0 LIMIT 1;
+    " );
+    $name = mysqli_fetch_array( $query );
+
+    $json[$admin0] = $name['name'] . ' (' . $count['count'] . ')'; // add to countries_with_extended_levels.json list
+
+    print date('H:i:s') . ' | ' . $admin0 . PHP_EOL;
 
 }
 
+// extended files
 print date('H:i:s') . ' | Start create countries_with_extended_levels.json' . PHP_EOL;
 $json = json_encode( $json );
 if ( file_exists( $output['lg']  . 'countries_with_extended_levels.json' ) ) {

@@ -473,16 +473,16 @@ foreach ( $list as $admin0 ) {
     if ( empty( $admin0 ) ) {
         continue;
     }
-    if ( file_exists( $output['lg'] . $admin0 . '.tsv' ) ) {
-        unlink($output['lg'] . $admin0 . '.tsv');
+    if ( file_exists( $output['root'] . $admin0 . '.tsv' ) ) {
+        unlink($output['root'] . $admin0 . '.tsv');
     }
     $results = mysqli_query( $con, "
-        SELECT * FROM {$table['lg']} WHERE admin0_code = '{$admin0}' AND level > 2 INTO OUTFILE '{$output['lg']}{$admin0}.tsv' 
+        SELECT * FROM {$table['lg']} WHERE admin0_code = '{$admin0}' AND level > 2 INTO OUTFILE '{$output['root']}{$admin0}.tsv' 
         FIELDS TERMINATED BY '\t' 
         LINES TERMINATED BY '\n';
     " );
-    if ( filesize( $output['lg'] . $admin0 . '.tsv' ) === 0 ) {
-        unlink( $output['lg'] . $admin0 . '.tsv' );
+    if ( filesize( $output['root'] . $admin0 . '.tsv' ) === 0 ) {
+        unlink( $output['root'] . $admin0 . '.tsv' );
         print date('H:i:s') . ' | '.$admin0.' no value. Removed.'. PHP_EOL;
         continue;
     }
@@ -497,14 +497,14 @@ foreach ( $list as $admin0 ) {
         exit("cannot open <$zipfilename>\n");
     }
 
-    $zip->addFile ( $output['lg'] . $admin0 . '.tsv' );
+    $zip->addFile ( $admin0 . '.tsv' );
     $zip->close();
 
     if ( ! file_exists( $output['lg'] . $admin0 . '.tsv.zip' ) ) {
         print date('H:i:s') . ' | ' . $admin0 . ' Not created.' . PHP_EOL;
         continue;
     }
-    unlink( $output['lg'] . $admin0 . '.tsv' );
+    unlink( $output['root'] . $admin0 . '.tsv' );
 
     // generate extension record
     $query = mysqli_query( $con, "

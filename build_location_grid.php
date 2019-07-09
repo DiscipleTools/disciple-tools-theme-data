@@ -14,6 +14,12 @@
 // Extend PHP limits for large processing
 ini_set('memory_limit', '50000M');
 
+$start_timestamp = date('H:i:s');
+
+print '**************************************************************'. PHP_EOL;
+print date('H:i:s') . ' | START SCRIPT'. PHP_EOL;
+print '**************************************************************'. PHP_EOL;
+
 
 /*************************************************************************************************************/
 // define and create output directories
@@ -66,7 +72,7 @@ $exists = mysqli_query( $con, "
 if ( $exists ) {
     print date('H:i:s') . ' | Drop previous dt_location_grid table.' . PHP_EOL;
     mysqli_query( $con, "
-        DROP TABLE `dt_location_grid`;
+        DROP TABLE {$table['dt']};
     " );
     print date('H:i:s') . ' | End previous dt_location_grid table.' . PHP_EOL;
 }
@@ -79,12 +85,10 @@ if ( $exists ) {
 // CREATE DT_LOCATION_GRID DATABASE
 /*************************************************************************************************************/
 
-print date('H:i:s') . ' | Begin.' . PHP_EOL;
-
 // create table
 print date('H:i:s') . ' | Start create table.' . PHP_EOL;
 $result = mysqli_query( $con, "
-CREATE TABLE `dt_location_grid` (
+CREATE TABLE {$table['dt']} (
    `grid_id` bigint(20) NOT NULL AUTO_INCREMENT,
     `name` varchar(200) NOT NULL DEFAULT '',
     `level` float DEFAULT NULL,
@@ -149,7 +153,7 @@ if ( ! $result ) {
 // transfer data
 print date('H:i:s') . ' | Start transfer data.' . PHP_EOL;
 $result = mysqli_query( $con, "
-INSERT INTO `dt_location_grid` SELECT * FROM `location_grid` WHERE level < 3;
+INSERT INTO {$table['dt']} SELECT * FROM `location_grid`;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | Failed to transfer data.' . PHP_EOL;
@@ -158,22 +162,11 @@ if ( ! $result ) {
     print date('H:i:s') . ' | End transfer data.' . PHP_EOL;
 }
 
-// delete levels
-print date('H:i:s') . ' | Start delete levels.' . PHP_EOL;
-$result = mysqli_query( $con, "
-DELETE FROM `dt_location_grid` WHERE level > 2;
-    " );
-if ( ! $result ) {
-    print date('H:i:s') . ' | Failed to delete lower records.' . PHP_EOL;
-    exit();
-} else {
-    print date('H:i:s') . ' | End delete levels.' . PHP_EOL;
-}
 
 // drop indexes
 print date('H:i:s') . ' | Start drop index admin1.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP INDEX admin1_code;
+ALTER TABLE {$table['dt']} DROP INDEX admin1_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped indexes.' . PHP_EOL;
@@ -185,7 +178,7 @@ if ( ! $result ) {
 // drop indexes
 print date('H:i:s') . ' | Start drop index admin2.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP INDEX admin2_code;
+ALTER TABLE {$table['dt']} DROP INDEX admin2_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped indexes.' . PHP_EOL;
@@ -197,7 +190,7 @@ if ( ! $result ) {
 // drop indexes
 print date('H:i:s') . ' | Start drop index admin3.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP INDEX admin3_code;
+ALTER TABLE {$table['dt']} DROP INDEX admin3_code;
 
     " );
 if ( ! $result ) {
@@ -210,7 +203,7 @@ if ( ! $result ) {
 // drop indexes
 print date('H:i:s') . ' | Start drop index admin4.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP INDEX admin4_code;
+ALTER TABLE {$table['dt']} DROP INDEX admin4_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped indexes.' . PHP_EOL;
@@ -222,7 +215,7 @@ if ( ! $result ) {
 // drop indexes
 print date('H:i:s') . ' | Start drop index admin5.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP INDEX admin5_code;
+ALTER TABLE {$table['dt']} DROP INDEX admin5_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped indexes.' . PHP_EOL;
@@ -234,7 +227,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column admin1.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN admin1_code;
+ALTER TABLE {$table['dt']} DROP COLUMN admin1_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -246,7 +239,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column admin2.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN admin2_code;
+ALTER TABLE {$table['dt']} DROP COLUMN admin2_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -258,7 +251,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column admin3.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN admin3_code;
+ALTER TABLE {$table['dt']} DROP COLUMN admin3_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -270,7 +263,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column admin4.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN admin4_code;
+ALTER TABLE {$table['dt']} DROP COLUMN admin4_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -282,7 +275,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column admin5.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN admin5_code;
+ALTER TABLE {$table['dt']} DROP COLUMN admin5_code;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -294,7 +287,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column geonames_ref.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN geonames_ref;
+ALTER TABLE {$table['dt']} DROP COLUMN geonames_ref;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -306,7 +299,7 @@ if ( ! $result ) {
 // drop columns
 print date('H:i:s') . ' | Start drop column wikidata_ref.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` DROP COLUMN wikidata_ref;
+ALTER TABLE {$table['dt']} DROP COLUMN wikidata_ref;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Dropped columns.' . PHP_EOL;
@@ -318,7 +311,7 @@ if ( ! $result ) {
 // add columns
 print date('H:i:s') . ' | Start add column alt_name.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` ADD `alt_name` VARCHAR(200) NULL DEFAULT NULL  AFTER `modification_date`;
+ALTER TABLE {$table['dt']} ADD `alt_name` VARCHAR(200) NULL DEFAULT NULL  AFTER `modification_date`;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Added columns.' . PHP_EOL;
@@ -330,7 +323,7 @@ if ( ! $result ) {
 // add columns
 print date('H:i:s') . ' | Start add column alt_population.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` ADD `alt_population` BIGINT(20) NULL DEFAULT 0  AFTER `alt_name`;
+ALTER TABLE {$table['dt']} ADD `alt_population` BIGINT(20) NULL DEFAULT 0  AFTER `alt_name`;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Added columns.' . PHP_EOL;
@@ -341,7 +334,7 @@ if ( ! $result ) {
 // add columns
 print date('H:i:s') . ' | Start is_custom_location.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` ADD `is_custom_location` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `alt_population`;
+ALTER TABLE {$table['dt']} ADD `is_custom_location` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `alt_population`;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Added columns.' . PHP_EOL;
@@ -353,7 +346,7 @@ if ( ! $result ) {
 // add columns
 print date('H:i:s') . ' | Start add column alt_name_changed.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` ADD `alt_name_changed` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `is_custom_location`;
+ALTER TABLE {$table['dt']} ADD `alt_name_changed` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `is_custom_location`;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Added columns.' . PHP_EOL;
@@ -366,7 +359,7 @@ if ( ! $result ) {
 // add index
 print date('H:i:s') . ' | Start alt_name_changed.' . PHP_EOL;
 $result = mysqli_query( $con, "
-ALTER TABLE `dt_location_grid` ADD FULLTEXT INDEX (`alt_name`);
+ALTER TABLE {$table['dt']} ADD FULLTEXT INDEX (`alt_name`);
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Add index.' . PHP_EOL;
@@ -378,7 +371,7 @@ if ( ! $result ) {
 // copy names
 print date('H:i:s') . ' | Start copy names.' . PHP_EOL;
 $result = mysqli_query( $con, "
-UPDATE `dt_location_grid` SET alt_name=name;
+UPDATE {$table['dt']} SET alt_name=name;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Copy names.' . PHP_EOL;
@@ -390,7 +383,7 @@ if ( ! $result ) {
 // copy names
 print date('H:i:s') . ' | Start populations.' . PHP_EOL;
 $result = mysqli_query( $con, "
-UPDATE `dt_location_grid` SET alt_population=population;
+UPDATE {$table['dt']} SET alt_population=population;
     " );
 if ( ! $result ) {
     print date('H:i:s') . ' | FAIL: Copy populations.' . PHP_EOL;
@@ -407,56 +400,8 @@ if ( ! $result ) {
 
 
 /*************************************************************************************************************/
-// CREATE FILES
+// CREATE COUNTRY FILES
 /*************************************************************************************************************/
-
-print date('H:i:s') . ' | Start dt_location_grid.tsv File Creation' . PHP_EOL;
-
-// Create Zip of dt_location_grid
-if ( file_exists( "{$output['root']}dt_location_grid.tsv" ) ) {
-    print 'unlink file' . PHP_EOL;
-    unlink("{$output['root']}dt_location_grid.tsv");
-}
-
-$result = mysqli_query( $con, "
-SELECT * FROM `dt_location_grid` INTO OUTFILE '{$output['root']}dt_location_grid.tsv' 
-FIELDS TERMINATED BY '\t' 
-LINES TERMINATED BY '\n';
-    " );
-if ( ! $result ) {
-
-    print date('H:i:s') . ' | FAIL: dt_location_grid.tsv file creation.' . PHP_EOL;
-    print_r($con);
-    exit();
-} else {
-    print date('H:i:s') . ' | End dt_location_grid.tsv file creation' . PHP_EOL;
-}
-
-print date('H:i:s') . ' | Start dt_location_grid.tsv.zip' . PHP_EOL;
-if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
-    unlink("{$output['lg']}dt_location_grid.tsv.zip");
-    print date('H:i:s') . ' | Deleted previous zip' . PHP_EOL;
-}
-
-$zip = new ZipArchive();
-$zipfilename = "{$output['lg']}dt_location_grid.tsv.zip";
-if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
-    exit("cannot open <$zipfilename>\n");
-}
-
-$zip->addFile ( "dt_location_grid.tsv" );
-print $zip->numFiles . PHP_EOL;
-$zip->close();
-
-if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
-    unlink("{$output['root']}dt_location_grid.tsv");
-    print date('H:i:s') . ' | Removed .tsv file' . PHP_EOL;
-    print date('H:i:s') . ' | End dt_location_grid.tsv.zip' . PHP_EOL;
-} else {
-    print date('H:i:s') . ' | FAIL: Create dt_location_grid.tsv.zip' . PHP_EOL;
-    exit();
-}
-// end Create Zip of dt_location_grid
 
 // create country zip files
 $json = [];
@@ -477,7 +422,7 @@ foreach ( $list as $admin0 ) {
         unlink($output['root'] . $admin0 . '.tsv');
     }
     $results = mysqli_query( $con, "
-        SELECT * FROM {$table['lg']} WHERE admin0_code = '{$admin0}' AND level > 2 INTO OUTFILE '{$output['root']}{$admin0}.tsv' 
+        SELECT * FROM {$table['dt']} WHERE admin0_code = '{$admin0}' AND level > 2 INTO OUTFILE '{$output['root']}{$admin0}.tsv' 
         FIELDS TERMINATED BY '\t' 
         LINES TERMINATED BY '\n';
     " );
@@ -534,5 +479,84 @@ if ( file_exists( $output['lg']  . 'countries_with_extended_levels.json' ) ) {
     print date('H:i:s') . ' | End create countries_with_extended_levels.json' . PHP_EOL;
 }
 
+/*************************************************************************************************************/
+// END CREATE COUNTRY FILES
+/*************************************************************************************************************/
 
-print date('H:i:s') . ' | Finish Script'. PHP_EOL;
+
+/*************************************************************************************************************/
+// CREATE DATA TABLE FILE
+/*************************************************************************************************************/
+
+// drop > admin2 level records.
+print date('H:i:s') . ' | Start delete levels.' . PHP_EOL;
+$result = mysqli_query( $con, "
+DELETE FROM {$table['dt']} WHERE level > 2;
+    " );
+if ( ! $result ) {
+    print date('H:i:s') . ' | Failed to delete lower records.' . PHP_EOL;
+    exit();
+} else {
+    print date('H:i:s') . ' | End delete levels.' . PHP_EOL;
+}
+
+print date('H:i:s') . ' | Start dt_location_grid.tsv File Creation' . PHP_EOL;
+
+// Create Zip of dt_location_grid
+if ( file_exists( "{$output['root']}dt_location_grid.tsv" ) ) {
+    print 'unlink file' . PHP_EOL;
+    unlink("{$output['root']}dt_location_grid.tsv");
+}
+
+$result = mysqli_query( $con, "
+SELECT * FROM {$table['dt']} INTO OUTFILE '{$output['root']}dt_location_grid.tsv' 
+FIELDS TERMINATED BY '\t' 
+LINES TERMINATED BY '\n';
+    " );
+if ( ! $result ) {
+
+    print date('H:i:s') . ' | FAIL: dt_location_grid.tsv file creation.' . PHP_EOL;
+    print_r($con);
+    exit();
+} else {
+    print date('H:i:s') . ' | End dt_location_grid.tsv file creation' . PHP_EOL;
+}
+
+print date('H:i:s') . ' | Start dt_location_grid.tsv.zip' . PHP_EOL;
+if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
+    unlink("{$output['lg']}dt_location_grid.tsv.zip");
+    print date('H:i:s') . ' | Deleted previous zip' . PHP_EOL;
+}
+
+$zip = new ZipArchive();
+$zipfilename = "{$output['lg']}dt_location_grid.tsv.zip";
+if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$zipfilename>\n");
+}
+
+$zip->addFile ( "dt_location_grid.tsv" );
+$zip->close();
+
+if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
+    unlink("{$output['root']}dt_location_grid.tsv");
+    print date('H:i:s') . ' | Removed .tsv file' . PHP_EOL;
+    print date('H:i:s') . ' | End dt_location_grid.tsv.zip' . PHP_EOL;
+} else {
+    print date('H:i:s') . ' | FAIL: Create dt_location_grid.tsv.zip' . PHP_EOL;
+    exit();
+}
+// end Create Zip of dt_location_grid
+
+
+// Drop new table
+print date('H:i:s') . ' | Start drop table' . PHP_EOL;
+$result = mysqli_query( $con, "
+DROP TABLE IF EXISTS {$table['dt']}
+    " );
+print date('H:i:s') . ' | End drop table' . PHP_EOL;
+
+
+print '**************************************************************'. PHP_EOL;
+print date('H:i:s') . ' | FINISH SCRIPT'. PHP_EOL;
+print date('H:i:s') . ' | START: ' . $start_timestamp . ' - END: ' . date('H:i:s') . PHP_EOL;
+print '**************************************************************'. PHP_EOL;

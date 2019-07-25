@@ -556,6 +556,57 @@ DROP TABLE IF EXISTS {$table['dt']}
 print date('H:i:s') . ' | End drop table' . PHP_EOL;
 
 
+/*************************************************************************************************************/
+// CREATE GEONAMES REF TABLE FILE
+/*************************************************************************************************************/
+
+// create geonames ref table
+print date('H:i:s') . ' | Start geonames_ref_table.tsv File Creation' . PHP_EOL;
+
+// Create Zip of dt_location_grid
+if ( file_exists( "{$output['root']}geonames_ref_table.tsv" ) ) {
+    print 'unlink file' . PHP_EOL;
+    unlink("{$output['root']}geonames_ref_table.tsv");
+}
+
+$result = mysqli_query( $con, "
+SELECT grid_id, geonames_ref FROM {$table['lg']} WHERE geonames_ref IS NOT NULL INTO OUTFILE '{$output['root']}geonames_ref_table.tsv' 
+FIELDS TERMINATED BY '\t' 
+LINES TERMINATED BY '\n';
+    " );
+if ( ! $result ) {
+    print date('H:i:s') . ' | FAIL: geonames_ref_table.tsv file creation.' . PHP_EOL;
+    print_r($con);
+    exit();
+} else {
+    print date('H:i:s') . ' | End geonames_ref_table.tsv file creation' . PHP_EOL;
+}
+
+print date('H:i:s') . ' | Start geonames_ref_table.tsv.zip' . PHP_EOL;
+if ( file_exists( "{$output['lg']}geonames_ref_table.tsv.zip" ) ) {
+    unlink("{$output['lg']}geonames_ref_table.tsv.zip");
+    print date('H:i:s') . ' | Deleted previous zip' . PHP_EOL;
+}
+
+$zip = new ZipArchive();
+$zipfilename = "{$output['lg']}geonames_ref_table.tsv.zip";
+if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$zipfilename>\n");
+}
+
+$zip->addFile ( "geonames_ref_table.tsv" );
+$zip->close();
+
+if ( file_exists( "{$output['lg']}geonames_ref_table.tsv.zip" ) ) {
+    unlink("{$output['root']}geonames_ref_table.tsv");
+    print date('H:i:s') . ' | Removed .tsv file' . PHP_EOL;
+    print date('H:i:s') . ' | End geonames_ref_table.tsv.zip' . PHP_EOL;
+} else {
+    print date('H:i:s') . ' | FAIL: Create geonames_ref_table.tsv.zip' . PHP_EOL;
+    exit();
+}
+
+
 print '**************************************************************'. PHP_EOL;
 print date('H:i:s') . ' | FINISH SCRIPT'. PHP_EOL;
 print date('H:i:s') . ' | START: ' . $start_timestamp . ' - END: ' . date('H:i:s') . PHP_EOL;

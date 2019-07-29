@@ -92,7 +92,7 @@ CREATE TABLE {$table['dt']} (
    `grid_id` bigint(20) NOT NULL AUTO_INCREMENT,
     `name` varchar(200) NOT NULL DEFAULT '',
     `level` float DEFAULT NULL,
-    `level_name` varchar(6) DEFAULT NULL,
+    `level_name` varchar(7) DEFAULT NULL,
     `country_code` varchar(10) DEFAULT NULL,
     `admin0_code` varchar(10) DEFAULT NULL,
     `admin1_code` varchar(20) DEFAULT NULL,   

@@ -485,6 +485,112 @@ if ( file_exists( $output['lg']  . 'countries_with_extended_levels.json' ) ) {
 
 
 /*************************************************************************************************************/
+// CREATE LEVEL FILES
+/*************************************************************************************************************/
+
+// create admin3 level file
+if ( file_exists( $output['root'] . 'admin3.tsv' ) ) {
+    unlink($output['root'] . 'admin3.tsv');
+}
+$results = mysqli_query( $con, "
+        SELECT * FROM {$table['dt']} WHERE level = 3 INTO OUTFILE '{$output['root']}admin3.tsv' 
+        FIELDS TERMINATED BY '\t' 
+        LINES TERMINATED BY '\n';
+    " );
+if ( filesize( $output['root'] . 'admin3.tsv' ) === 0 ) {
+    unlink( $output['root'] . 'admin3.tsv' );
+    print date('H:i:s') . ' | ' . 'admin3.tsv no value. Removed.'. PHP_EOL;
+}
+
+if ( file_exists( $output['lg'] . 'admin3.tsv.zip' ) ) {
+    unlink($output['lg'] . 'admin3.tsv.zip' );
+}
+$zip = new ZipArchive();
+$zipfilename = $output['lg'] . 'admin3.tsv.zip';
+
+if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$zipfilename>\n");
+}
+
+$zip->addFile (  'admin3.tsv' );
+$zip->close();
+
+if ( ! file_exists( $output['lg']  . 'admin3.tsv.zip' ) ) {
+    print date('H:i:s') . ' | '  . 'admin3.tsv.zip Not created.' . PHP_EOL;
+}
+unlink( $output['root']  . 'admin3.tsv' );
+
+
+// create admin4 level file
+if ( file_exists( $output['root'] . 'admin4.tsv' ) ) {
+    unlink($output['root'] . 'admin4.tsv');
+}
+$results = mysqli_query( $con, "
+        SELECT * FROM {$table['dt']} WHERE level = 4 INTO OUTFILE '{$output['root']}admin4.tsv' 
+        FIELDS TERMINATED BY '\t' 
+        LINES TERMINATED BY '\n';
+    " );
+if ( filesize( $output['root'] . 'admin4.tsv' ) === 0 ) {
+    unlink( $output['root'] . 'admin4.tsv' );
+    print date('H:i:s') . ' | ' . 'admin4.tsv no value. Removed.'. PHP_EOL;
+}
+
+if ( file_exists( $output['lg'] . 'admin4.tsv.zip' ) ) {
+    unlink($output['lg'] . 'admin4.tsv.zip' );
+}
+$zip = new ZipArchive();
+$zipfilename = $output['lg'] . 'admin4.tsv.zip';
+
+if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$zipfilename>\n");
+}
+
+$zip->addFile (  'admin4.tsv' );
+$zip->close();
+
+if ( ! file_exists( $output['lg']  . 'admin4.tsv.zip' ) ) {
+    print date('H:i:s') . ' | '  . 'admin4.tsv.zip Not created.' . PHP_EOL;
+}
+unlink( $output['root']  . 'admin4.tsv' );
+
+
+// create admin5 level file
+if ( file_exists( $output['root'] . 'admin5.tsv' ) ) {
+    unlink($output['root'] . 'admin5.tsv');
+}
+$results = mysqli_query( $con, "
+        SELECT * FROM {$table['dt']} WHERE level = 5 INTO OUTFILE '{$output['root']}admin5.tsv' 
+        FIELDS TERMINATED BY '\t' 
+        LINES TERMINATED BY '\n';
+    " );
+if ( filesize( $output['root'] . 'admin5.tsv' ) === 0 ) {
+    unlink( $output['root'] . 'admin5.tsv' );
+    print date('H:i:s') . ' | ' . 'admin5.tsv no value. Removed.'. PHP_EOL;
+}
+
+if ( file_exists( $output['lg'] . 'admin5.tsv.zip' ) ) {
+    unlink($output['lg'] . 'admin5.tsv.zip' );
+}
+$zip = new ZipArchive();
+$zipfilename = $output['lg'] . 'admin5.tsv.zip';
+
+if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$zipfilename>\n");
+}
+
+$zip->addFile (  'admin5.tsv' );
+$zip->close();
+
+if ( ! file_exists( $output['lg']  . 'admin5.tsv.zip' ) ) {
+    print date('H:i:s') . ' | '  . 'admin5.tsv.zip Not created.' . PHP_EOL;
+}
+unlink( $output['root']  . 'admin5.tsv' );
+
+/*************************************************************************************************************/
+// END CREATE LEVEL FILES
+/*************************************************************************************************************/
+
+/*************************************************************************************************************/
 // CREATE DATA TABLE FILE
 /*************************************************************************************************************/
 
@@ -549,11 +655,11 @@ if ( file_exists( "{$output['lg']}dt_location_grid.tsv.zip" ) ) {
 
 
 // Drop new table
-print date('H:i:s') . ' | Start drop table' . PHP_EOL;
-$result = mysqli_query( $con, "
-DROP TABLE IF EXISTS {$table['dt']}
-    " );
-print date('H:i:s') . ' | End drop table' . PHP_EOL;
+//print date('H:i:s') . ' | Start drop table' . PHP_EOL;
+//$result = mysqli_query( $con, "
+//DROP TABLE IF EXISTS {$table['dt']}
+//    " );
+//print date('H:i:s') . ' | End drop table' . PHP_EOL;
 
 
 /*************************************************************************************************************/

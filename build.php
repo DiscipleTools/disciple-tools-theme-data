@@ -586,6 +586,40 @@ if ( ! file_exists( $output['lg']  . 'admin5.tsv.zip' ) ) {
 }
 unlink( $output['root']  . 'admin5.tsv' );
 
+
+
+// entire dt_locations_database
+if ( file_exists( $output['root'] . 'dt_full_location_grid.tsv' ) ) {
+    unlink($output['root'] . 'dt_full_location_grid.tsv');
+}
+$results = mysqli_query( $con, "
+        SELECT * FROM {$table['dt']} INTO OUTFILE '{$output['root']}dt_full_location_grid.tsv' 
+        FIELDS TERMINATED BY '\t' 
+        LINES TERMINATED BY '\n';
+    " );
+if ( filesize( $output['root'] . 'dt_full_location_grid.tsv' ) === 0 ) {
+    unlink( $output['root'] . 'dt_full_location_grid.tsv' );
+    print date('H:i:s') . ' | ' . 'dt_full_location_grid.tsv no value. Removed.'. PHP_EOL;
+}
+
+if ( file_exists( $output['lg'] . 'dt_full_location_grid.tsv.zip' ) ) {
+    unlink($output['lg'] . 'dt_full_location_grid.tsv.zip' );
+}
+$zip = new ZipArchive();
+$zipfilename = $output['lg'] . 'dt_full_location_grid.tsv.zip';
+
+if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$zipfilename>\n");
+}
+
+$zip->addFile (  'dt_full_location_grid.tsv' );
+$zip->close();
+
+if ( ! file_exists( $output['lg']  . 'dt_full_location_grid.tsv.zip' ) ) {
+    print date('H:i:s') . ' | '  . 'dt_full_location_grid.tsv.zip Not created.' . PHP_EOL;
+}
+unlink( $output['root']  . 'dt_full_location_grid.tsv' );
+
 /*************************************************************************************************************/
 // END CREATE LEVEL FILES
 /*************************************************************************************************************/

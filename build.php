@@ -625,6 +625,55 @@ unlink( $output['root']  . 'dt_full_location_grid.tsv' );
 /*************************************************************************************************************/
 
 /*************************************************************************************************************/
+// BREAK FULL DATABASE INTO SMALL CHUNKS FOR FULL INSTALL
+/*************************************************************************************************************/
+
+// entire dt_locations_database
+$loop_count = 21;
+$offset = 0;
+for ($i = 0; $i <= $loop_count; $i++) {
+    if ( $offset > 386736 ) {
+        break;
+    }
+    if ( file_exists( $output['root'] . 'dt_full_location_grid_'.$i.'.tsv' ) ) {
+        unlink($output['root'] . 'dt_full_location_grid_'.$i.'.tsv');
+    }
+    $results = mysqli_query( $con, "
+        SELECT * FROM {$table['dt']} LIMIT 20000 OFFSET {$offset} INTO OUTFILE '{$output['root']}dt_full_location_grid_{$i}.tsv' 
+        FIELDS TERMINATED BY '\t' 
+        LINES TERMINATED BY '\n';
+    " );
+    if ( filesize( $output['root'] . 'dt_full_location_grid_'.$i.'.tsv' ) === 0 ) {
+        unlink( $output['root'] . 'dt_full_location_grid_'.$i.'.tsv' );
+        print date('H:i:s') . ' | ' . 'dt_full_location_grid_'.$i.'.tsv no value. Removed.'. PHP_EOL;
+    }
+
+    if ( file_exists( $output['lg'] . 'dt_full_location_grid_'.$i.'.tsv.zip' ) ) {
+        unlink($output['lg'] . 'dt_full_location_grid_'.$i.'.tsv.zip' );
+    }
+    $zip = new ZipArchive();
+    $zipfilename = $output['lg'] . 'dt_full_location_grid_'.$i.'.tsv.zip';
+
+    if ($zip->open($zipfilename, ZipArchive::CREATE)!==TRUE) {
+        exit("cannot open <$zipfilename>\n");
+    }
+
+    $zip->addFile (  'dt_full_location_grid_'.$i.'.tsv' );
+    $zip->close();
+
+    if ( ! file_exists( $output['lg']  . 'dt_full_location_grid_'.$i.'.tsv.zip' ) ) {
+        print date('H:i:s') . ' | '  . 'dt_full_location_grid_'.$i.'.tsv.zip Not created.' . PHP_EOL;
+    }
+    unlink( $output['root']  . 'dt_full_location_grid_'.$i.'.tsv' );
+
+    $offset = $offset + 20000;
+}
+
+/*************************************************************************************************************/
+// END SMALL CHUNKS FOR FULL INSTALL
+/*************************************************************************************************************/
+
+/*************************************************************************************************************/
 // CREATE DATA TABLE FILE
 /*************************************************************************************************************/
 

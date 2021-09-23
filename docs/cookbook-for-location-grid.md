@@ -1,4 +1,4 @@
-# Cookbook for Disciple Tools `dt_location_grid` table
+# Cookbook for Disciple.Tools `dt_location_grid` table
 
 ### 1. Get Source File from Location Grid Project
 [Location Grid Project > data_source > location_grid.tsv](https://github.com/DiscipleTools/location-grid-project/tree/master/data_source)

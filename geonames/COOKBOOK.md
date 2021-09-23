@@ -1,4 +1,4 @@
-# Cookbook for Disciple Tools `dt_geonames` table
+# Cookbook for Disciple.Tools `dt_geonames` table
 
 ### 1. Get Source File from Saturation Grid Project
 [Saturation Grid Project > data_source > saturation-grid-geonames.tsv](https://github.com/DiscipleTools/saturation-grid-project/tree/master/data_source)
